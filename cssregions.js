@@ -900,7 +900,8 @@ window.CSSRegions = function(scope) {
             destinationNodes = getRegionsForFlow(currentFlow.getRegions(), currentFlow);
             currentFlow.overset = false;
 
-            if (regionsValidFlag[currentFlow.name]) { // Can we skip some of the layout?
+            // Can we skip some of the layout?
+            if (currentFlow.lastRegionWithContentIndex >= 0) {
                 tmp = destinationNodes[currentFlow.lastRegionWithContentIndex].childNodes;
                 for (i = 0, l = tmp.length; i < l; ++i) {
                     sourceNodes.push(tmp[i]);
