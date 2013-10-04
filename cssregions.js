@@ -642,21 +642,29 @@ window.CSSRegions = function(scope) {
             return this.prefixes.om.concat(eventName)
         },
         
-        init: function() {
-            
+        // Options:
+        // - loadStyles: true (default) loads and parses document CSS styles
+        // 
+        init: function(options) {
+            if (options == null) options = {loadStyles: true};
+
             var self = this
-            
-            if (!window.StyleLoader){
-                console.error("Missing StyleLoader.js")
-                return
-            }
-            
-            /* Load all stylesheets then feed them to the parser */
-            new StyleLoader(function(){
-                return function(stylesheets){
-                    self.onStylesLoaded(stylesheets)
+
+            if (options.loadStyles) {
+                if (!window.StyleLoader){
+                    console.error("Missing StyleLoader.js")
+                    return
                 }
-            }())
+                
+                /* Load all stylesheets then feed them to the parser */
+                new StyleLoader(function(){
+                    return function(stylesheets){
+                        self.onStylesLoaded(stylesheets)
+                    }
+                }())
+            } else {
+                self.onStylesLoaded([])
+            }
         },
         
         setup: function(){
@@ -686,7 +694,7 @@ window.CSSRegions = function(scope) {
             
             if (parser.cssRules.length === 0) {
                 console.log("There is no inline CSS for CSS Regions!");
-                return;
+                // return;
             }  
             
             // Parse the rules and look for "flow-into" and "flow-from" rules;
