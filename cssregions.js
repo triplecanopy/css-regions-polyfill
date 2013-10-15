@@ -1506,6 +1506,10 @@ window.CSSRegions = function(scope) {
         }
         return ret;
     };
+    NamedFlow.prototype.reset = function() {
+        this.regions = [];
+        this.lastRegionWithContentIndex = -1;
+    };
     
     var Supports = (function(){
         // all spaces are important!
