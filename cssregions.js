@@ -1506,9 +1506,31 @@ window.CSSRegions = function(scope) {
         }
         return ret;
     };
+
+    /*
+        Reset, assuming all previously-tracked regions have been destroyed.
+        Invalidate entire flow (as we've abandoned the regionsValidFlag system,
+        which still re-rendered too frequently).
+    */
     NamedFlow.prototype.reset = function() {
         this.regions = [];
         this.lastRegionWithContentIndex = -1;
+    };
+
+    /*
+        If the last several regions need to be re-processed, roll back internal
+        cache so the changes will be picked up in the next doLayout.
+
+        @param {Number} numToRollback how many regions to roll back?
+    */
+    NamedFlow.prototype.rollbackRegions = function(numToRollback) {
+        var rollbackToIndex = this.lastRegionWithContentIndex - numToRollback;
+        for (var i=1; i<=numToRollback; i++) {
+            this.regions[rollbackToIndex].innerHTML +=
+                this.regions[rollbackToIndex + i].innerHTML;
+            this.regions[rollbackToIndex + i].innerHTML = "";
+        }
+        this.lastRegionWithContentIndex = rollbackToIndex
     };
     
     var Supports = (function(){
