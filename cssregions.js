@@ -1525,6 +1525,10 @@ window.CSSRegions = function(scope) {
     */
     NamedFlow.prototype.rollbackRegions = function(numToRollback) {
         var rollbackToIndex = this.lastRegionWithContentIndex - numToRollback;
+        if (rollbackToIndex < 0) {
+            numToRollback += rollbackToIndex;
+            rollbackToIndex = 0;
+        }
         for (var i=1; i<=numToRollback; i++) {
             this.regions[rollbackToIndex].innerHTML +=
                 this.regions[rollbackToIndex + i].innerHTML;
